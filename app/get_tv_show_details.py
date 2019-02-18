@@ -4,39 +4,17 @@ import shutil
 
 import inquirer
 
+PATTERNS = ('[\d]{1,2}?[xX]([\d]{1,2})', '[e_]p?(\d\d)', '^([\d]{1,2}) - ', 'E([\d]{1,2})',
+            '\.20\d\d.[\d]{1,2}?([\d]{1,2})', '\.[\d]{1,2}?([\d]{1,2})', '^Season ([\d]{1,2})',
+            'Episode ([\d]{1,2})')
+    
 def get_episode_details(file_name):
     res = None
-    m = re.search( '[\d]{1,2}?[xX]([\d]{1,2})', file_name)
-    if m:
-        res = m.group(1)
-    else:
-        m = re.search( '[e_]p?(\d\d)', file_name)
-        if m:
+    for p in PATTERNS:
+        m = re.search(p, file_name)
+        if m: 
             res = m.group(1)
-        else:
-            m = re.search('^([\d]{1,2}) - ', file_name)
-            if m:
-                res = m.group(1) 
-            else:
-                m = re.search('E([\d]{1,2})', file_name)
-                if m:
-                    res = m.group(1) 
-                else:
-                    m = re.search('\.20\d\d.[\d]{1,2}?([\d]{1,2})', file_name)
-                    if m:
-                        res = m.group(1) 
-                    else:
-                        m = re.search('\.[\d]{1,2}?([\d]{1,2})', file_name)
-                        if m:
-                            res = m.group(1) 
-                        else:
-                            m = re.search('^Season ([\d]{1,2})', file_name)
-                            if m:
-                                res = m.group(1) 
-                            else:
-                                m = re.search('Episode ([\d]{1,2})', file_name)
-                                if m:
-                                    res = m.group(1) 
+            break
     if res:
         return ('%02d' % int(res), os.path.splitext(file_name)[1])
     return None
