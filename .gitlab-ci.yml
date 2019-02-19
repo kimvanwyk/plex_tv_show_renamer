@@ -889,6 +889,7 @@ rollout 100%:
 
     echo "Pushing to GitLab Container Registry..."
     docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
+    docker tag "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" "$CI_REGISTRY_IMAGE:latest"
     docker push "$CI_REGISTRY_IMAGE:latest"
     echo ""
   }
