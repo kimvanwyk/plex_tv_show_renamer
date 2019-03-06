@@ -5,8 +5,8 @@ import shutil
 import inquirer
 
 PATTERNS = ('[\d]{1,2}?[xX]([\d]{1,2})', '[e_]p?(\d\d)', '^([\d]{1,2}) - ', 'E([\d]{1,2})',
-            '\.20\d\d.[\d]{1,2}?([\d]{1,2})', '\.[\d]{1,2}?([\d]{1,2})', '^Season ([\d]{1,2})',
-            'Episode ([\d]{1,2})')
+            '\.20\d\d.[\d]{1,2}?([\d]{1,2})', '\.[\d]{1,2}?([\d]{1,2})', '^[sS]eason ([\d]{1,2})',
+            '[eE]pisode ([\d]{1,2})')
     
 def get_episode_details(file_name):
     res = None
