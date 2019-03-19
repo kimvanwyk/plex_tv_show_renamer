@@ -42,26 +42,34 @@ def get_season():
     return os.getcwd().strip("/")[-2:]
 
 
-def print_matches(sn):
+def get_changes(sn, debug=False):
+    ''' Return a list of (original name, new name) tuples for each
+    file in the current directory which would change, for the given show
+    
+    Print debug about changes and inabilities to match if `debug`
+    '''
+
     dirs = os.listdir(".")
     dirs.sort()
+    changes = []
     for f in dirs:
         vals = get_episode_details(f)
         if vals:
-            print(f"{f:40} -> {sn} - s{get_season()}e{vals[0]}{vals[1]}")
+            new = f"{sn} - s{get_season()}e{vals[0]}{vals[1]}"
+            if f != new:
+                changes.append((f, new))
+                if debug:
+                    print(f"{f:40} -> {new}")
         else:
-            print("%s not matched" % f)
+            if debug:
+                print(f"{f} not matched")
+    return changes
 
 
-def rename_files(sn):
-    dirs = os.listdir(".")
-    dirs.sort()
-    for f in dirs:
-        vals = get_episode_details(f)
-        if vals:
-            shutil.move(f, "%s - s%se%s%s" % (sn, get_season(), *vals))
-        else:
-            print("%s not matched" % f)
+def rename_files(sn, debug=False):
+    changes = get_changes(sn, debug)
+    for (old, new) in changes:
+        shutil.move(old, new)
 
 
 shows = [
@@ -85,10 +93,14 @@ seasons.sort()
 for s in seasons:
     os.chdir(s)
     print(f"Processing {s}")
-    print_matches(show)
-    questions = [inquirer.Confirm("proceed", message="Process season?")]
-    answers = inquirer.prompt(questions)
-    if answers["proceed"]:
-        rename_files(show)
-        print_matches(show)
+    changes = get_changes(show, debug=True)
+    if changes:
+        questions = [inquirer.Confirm("proceed", message="Process season?")]
+        answers = inquirer.prompt(questions)
+        if answers["proceed"]:
+            rename_files(show)
+            print(f"{s} processed")
+    else:
+        print(f"No changes to process in {s}")
+    print()
     os.chdir("../")
