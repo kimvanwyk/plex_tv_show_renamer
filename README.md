@@ -15,7 +15,7 @@ Once a show is selected, the files for each season are shown in turn with an ind
 
 ![02_process_query.png](__readme_images/02_process_query.png)
 
-If processing is selected, the file list is shown again and then the next season is prompted for, or the program ends if all seasons have been presented.
+When processing is complete the next season is prompted for, or the program ends if all seasons have been presented.
 
 Note that files that do not match any of the built-in patterns are warned about and subsequently ignored:
 
