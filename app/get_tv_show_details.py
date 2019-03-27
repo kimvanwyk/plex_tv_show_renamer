@@ -49,17 +49,27 @@ class PlexRenamer(object):
             dirs = os.listdir(".")
             dirs.sort()
             self.changes = []
+            existing = []
             for f in dirs:
                 vals = self.get_episode_details(f)
                 if vals:
                     new = f"{self.show} - s{self.season_number}e{vals[0]}{vals[1]}"
                     if f != new:
                         self.changes.append((f, new))
-                        if self.debug:
-                            print(f"{f:40} -> {new}")
+                    else:
+                        existing.append(f)
                 else:
                     if self.debug:
                         print(f"{f} not matched")
+            if self.changes and self.debug:
+                if existing:
+                    print('Existing episodes:')
+                    print('\n'.join(f for f in existing))
+                    
+                print('Proposed changes:')
+                for (f, new) in self.changes:
+                    print(f"{f:40} -> {new}")
+
             return self.changes
 
     def rename_files(self):
