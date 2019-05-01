@@ -90,7 +90,7 @@ class PlexRenamer(object):
             self.season_number = self.season[-2:]
             os.chdir(self.season)
             if self.debug:
-                print(f"Processing {self.season}")
+                print(f"Processing {self.show} - {self.season}")
             return True
         return False
 
@@ -113,18 +113,21 @@ def get_shows():
 
 if __name__ == "__main__":
     shows = get_shows()
-    questions = [inquirer.List("show", "Please select show", choices=shows)]
+    questions = [inquirer.List("show", "Please select show", choices=['Process all shows'] + shows)]
     answers = inquirer.prompt(questions)
-    show = answers["show"]
-    os.chdir(show)
-    pr = PlexRenamer(show, debug=True)
-    while pr.change_season():
-        changes = pr.get_changes()
-        if changes:
-            questions = [inquirer.Confirm("proceed", message="Process season?")]
-            answers = inquirer.prompt(questions)
-            if answers["proceed"]:
-                pr.rename_files()
-        else:
-            print(f"No changes to process in {pr.season}")
-        print()
+    if answers['show'] != 'Process all shows':
+        shows = [show]
+    for show in shows:
+        os.chdir(show)
+        pr = PlexRenamer(show, debug=True)
+        while pr.change_season():
+            changes = pr.get_changes()
+            if changes:
+                questions = [inquirer.Confirm("proceed", message="Process season?")]
+                answers = inquirer.prompt(questions)
+                if answers["proceed"]:
+                    pr.rename_files()
+            else:
+                print(f"No changes to process in {pr.season}")
+            print()
+        os.chdir('../')
