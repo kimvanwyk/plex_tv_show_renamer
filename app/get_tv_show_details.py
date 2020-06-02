@@ -5,6 +5,7 @@ import shutil
 import inquirer
 
 PATTERNS = (
+    "E([\d]{1,2})_",
     "[\d]{1,2}\.([\d]{1,2})\.",
     "[\d]{1,2}?[xX]([\d]{1,2})",
     "[e_]p?(\d\d)",
