@@ -117,7 +117,7 @@ if __name__ == "__main__":
     questions = [inquirer.List("show", "Please select show", choices=['Process all shows'] + shows)]
     answers = inquirer.prompt(questions)
     if answers['show'] != 'Process all shows':
-        shows = [show]
+        shows = [answers['show']]
     for show in shows:
         os.chdir(show)
         pr = PlexRenamer(show, debug=True)
