@@ -15,6 +15,7 @@ PATTERNS = (
     "\.[\d]{1,2}?([\d]{1,2})",
     "^[sS]eason ([\d]{1,2})",
     "[eE]pisode ([\d]{1,2})",
+    "[sS]eries [\d]{1,2}, ([\d]{1,2})",
 )
 
 
@@ -40,7 +41,7 @@ class PlexRenamer(object):
         return None
 
     def get_changes(self):
-        """ Return a list of (original name, new name) tuples for each
+        """Return a list of (original name, new name) tuples for each
         file in the current directory which would change, for the given show
 
         Print debug about changes and inabilities to match if `debug`
@@ -64,18 +65,18 @@ class PlexRenamer(object):
                         print(f"{f} not matched")
             if self.changes and self.debug:
                 if existing:
-                    print('Existing episodes:')
-                    print('\n'.join(f for f in existing))
-                    
-                print('Proposed changes:')
-                for (f, new) in self.changes:
+                    print("Existing episodes:")
+                    print("\n".join(f for f in existing))
+
+                print("Proposed changes:")
+                for f, new in self.changes:
                     print(f"{f:40} -> {new}")
 
             return self.changes
 
     def rename_files(self):
         if self.changes:
-            for (old, new) in self.changes:
+            for old, new in self.changes:
                 shutil.move(old, new)
             if self.debug:
                 print(f"{self.season} processed")
@@ -114,10 +115,14 @@ def get_shows():
 
 if __name__ == "__main__":
     shows = get_shows()
-    questions = [inquirer.List("show", "Please select show", choices=['Process all shows'] + shows)]
+    questions = [
+        inquirer.List(
+            "show", "Please select show", choices=["Process all shows"] + shows
+        )
+    ]
     answers = inquirer.prompt(questions)
-    if answers['show'] != 'Process all shows':
-        shows = [answers['show']]
+    if answers["show"] != "Process all shows":
+        shows = [answers["show"]]
     for show in shows:
         os.chdir(show)
         pr = PlexRenamer(show, debug=True)
@@ -131,4 +136,4 @@ if __name__ == "__main__":
             else:
                 print(f"No changes to process in {pr.season}")
             print()
-        os.chdir('../')
+        os.chdir("../")
