@@ -1,0 +1,10 @@
+[project]
+name = "plex-tv-show-renamer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "black>=24.10.0",
+    "inquirer>=3.4.0",
+]
